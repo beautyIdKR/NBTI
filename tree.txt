@@ -1,0 +1,77 @@
+.
+├── app
+│   ├── api
+│   │   ├── nbti
+│   │   │   └── analyze
+│   │   │       └── step1
+│   │   │           └── route.ts
+│   │   └── proxy
+│   │       └── route.ts
+│   ├── components
+│   │   └── nbti
+│   │       ├── Step1Result.tsx
+│   │       └── Step2Result.tsx
+│   ├── favicon.ico
+│   ├── globals.css
+│   ├── layout.tsx
+│   ├── page.module.css
+│   ├── page.tsx
+│   └── utils
+│       ├── nbtiLogic_bak.ts
+│       └── nbtiLogic.ts
+├── eslint.config.mjs
+├── next-env.d.ts
+├── next.config.ts
+├── package-lock.json
+├── package.json
+├── public
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── images
+│   │   └── nbti
+│   │       ├── left4Good.jpg
+│   │       ├── left4Guide.jpg
+│   │       ├── left4Guide.png
+│   │       ├── nail_P1_1.png
+│   │       ├── nail_P1_2.png
+│   │       ├── nail_P2_1.png
+│   │       ├── nail_P2_2.png
+│   │       ├── nail_P3_1.png
+│   │       ├── nail_P3_2.png
+│   │       ├── nail_P4_1.png
+│   │       ├── nail_P4_2.png
+│   │       ├── nail_P5_1.png
+│   │       ├── nail_P5_2.png
+│   │       ├── nail_P6_1.png
+│   │       ├── nail_P6_2.png
+│   │       ├── P1_icn.png
+│   │       ├── P1_result.png
+│   │       ├── P1_shape.png
+│   │       ├── P2_icn.png
+│   │       ├── P2_result.png
+│   │       ├── P2_shape.png
+│   │       ├── P3_icn.png
+│   │       ├── P3_result.png
+│   │       ├── P3_shape.png
+│   │       ├── P4_icn.png
+│   │       ├── P4_result.png
+│   │       ├── P4_shape.png
+│   │       ├── P5_icn.png
+│   │       ├── P5_result.png
+│   │       ├── P5_shape.png
+│   │       ├── P6_icn.png
+│   │       ├── P6_result.png
+│   │       ├── P6_shape.png
+│   │       ├── STEP2-뚝심있는 승부사.png
+│   │       ├── STEP2-유연한 지성 마에스트로.png
+│   │       ├── STEP2-투명감성의 아티스트.png
+│   │       ├── 우아한뮤즈-슬림와이드.png
+│   │       └── 우아한뮤즈-크기.png
+│   ├── next.svg
+│   ├── vercel.svg
+│   └── window.svg
+├── README.md
+├── tree.txt
+└── tsconfig.json
+
+13 directories, 62 files
