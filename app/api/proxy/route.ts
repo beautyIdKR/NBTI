@@ -74,12 +74,25 @@ export async function POST(request: NextRequest) {
     console.log(`✅ [Proxy] AI 서버 응답: status=${backendResponse.status} (${elapsed}ms)`);
 
     if (!backendResponse.ok) {
-      const errorText = await backendResponse.text();
-      console.error(`🔥 [Proxy] AI 서버 에러: ${errorText.substring(0, 500)}`);
-      return NextResponse.json(
-        { status: 'error', message: `AI Server Error: ${backendResponse.status}`, detail: errorText },
-        { status: backendResponse.status }
-      );
+      // AI 서버가 에러 JSON을 보냈을 수 있으므로 먼저 JSON 파싱 시도
+      try {
+        const errorData = await backendResponse.json();
+        console.error(`🔥 [Proxy] AI 서버 에러 (JSON): ${JSON.stringify(errorData).substring(0, 300)}`);
+        // AI 서버의 에러 응답을 그대로 프론트에 전달 (status: 'error' 포함)
+        return NextResponse.json({
+          ...errorData,
+          status: errorData.status || 'error',
+          error_code: errorData.error_code || 'AI_SERVER_ERROR',
+        });
+      } catch {
+        const errorText = await backendResponse.text();
+        console.error(`🔥 [Proxy] AI 서버 에러 (text): ${errorText.substring(0, 500)}`);
+        return NextResponse.json({
+          status: 'error',
+          error_code: 'AI_SERVER_ERROR',
+          message: `AI 분석 중 오류가 발생했습니다.\n다시 촬영해주세요.`,
+        });
+      }
     }
 
     // 4. 결과 파싱 및 반환
