@@ -49,23 +49,25 @@ export default function Step1Result({ data, onNext, onRetry }: Props) {
       : path;
   };
 
-  // 🌟 [시스템 공유] 인스타/X/페북
+  // 🌟 [시스템 공유] 
   const handleNativeShare = async (platformName?: string) => {
     setIsSharing(true);
     try {
       try { await navigator.clipboard.writeText(currentUrl); } catch (e) {}
 
-      // 이미지 캐시 방지
-      const noCacheImgUrl = `${data.resultImg}?t=${new Date().getTime()}`;
-      const response = await fetch(noCacheImgUrl);
+      // 결과 이미지 파일 생성
+      const resultImgUrl = getAbsoluteUrl(data.resultImg);
+      const response = await fetch(resultImgUrl);
       const blob = await response.blob();
-      const file = new File([blob], `NBTI_${data.name}.png`, { type: 'image/png' });
+      const file = new File([blob], `NBTI_${data.name}.jpg`, { type: 'image/jpeg' });
+
+      // text에 URL을 포함시켜야 시스템 공유에서 링크도 함께 전달됨
+      const shareText = `[네일BTI] ${data.name} (${data.subTitle})\n나도 테스트하기 👉 ${currentUrl}`;
 
       const shareData: ShareData = {
         files: [file], 
-        title: 'NBTI 결과',
-        text: `[N(네일)BTI] ${data.name} (${data.subTitle})`, 
-        url: currentUrl 
+        title: '네일BTI 결과',
+        text: shareText,
       };
 
       if (navigator.share && navigator.canShare(shareData)) {
@@ -85,7 +87,7 @@ export default function Step1Result({ data, onNext, onRetry }: Props) {
   };
 
   const shareTwitterFallback = () => {
-    const text = `[N(네일)BTI] ${data.name} - 내 성격 유형 확인하기`;
+    const text = `[네일BTI] ${data.name} - 내 성격 유형 확인하기`;
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(currentUrl)}`, '_blank');
   };
 
@@ -117,22 +119,15 @@ export default function Step1Result({ data, onNext, onRetry }: Props) {
       alert('카카오톡 로딩 중입니다. 잠시 후 다시 시도해주세요.'); return;
     }
     
-    // 이미지 주소 (캐시 방지)
-    const resultImageUrl = getAbsoluteUrl(data.resultImg) + '?t=' + new Date().getTime();
-    
-    // 현재 페이지 주소 (여기가 등록된 도메인이어야 함!)
-    console.log("Sharing URL:", currentUrl); 
+    // 결과 카드 이미지 (공유용)
+    const resultImageUrl = getAbsoluteUrl(data.resultImg);
 
     window.Kakao.Share.sendDefault({
       objectType: 'feed',
       content: {
-        title: `[(네일)NBTI] ${data.name}`,
+        title: `[네일BTI] ${data.name}`,
         description: data.subTitle,
         imageUrl: resultImageUrl,
-        // 이미지가 잘 나온다고 하셨으니 800x800 유지 (정사각형 강제)
-        imageWidth: 800,
-        imageHeight: 800,
-        // 👇 [중요] content 안의 link가 있어야 이미지를 눌렀을 때 이동함
         link: {
           mobileWebUrl: currentUrl,
           webUrl: currentUrl,
@@ -141,18 +136,11 @@ export default function Step1Result({ data, onNext, onRetry }: Props) {
       buttons: [
         {
           title: '결과 자세히 보기',
-          // 👇 [중요] buttons 안의 link가 있어야 버튼을 눌렀을 때 이동함
-          link: {
-            mobileWebUrl: currentUrl,
-            webUrl: currentUrl,
-          },
+          link: { mobileWebUrl: currentUrl, webUrl: currentUrl },
         },
         {
           title: '나도 테스트하기',
-          link: {
-            mobileWebUrl: currentUrl,
-            webUrl: currentUrl,
-          },
+          link: { mobileWebUrl: currentUrl, webUrl: currentUrl },
         },
       ],
     });
@@ -173,7 +161,7 @@ export default function Step1Result({ data, onNext, onRetry }: Props) {
           background: '#4E3B38', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: '14px', fontWeight: 'bold', color: '#fff', position: 'sticky', top: 0, zIndex: 10
       }}>
-        (네일)NBTI : 손톱으로 알아보는 내 성격
+        네일BTI : 손톱으로 알아보는 내 성격
       </div>
 
       <div style={{ padding: '0 20px' }}>

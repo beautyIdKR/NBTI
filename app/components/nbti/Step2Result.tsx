@@ -49,13 +49,41 @@ export default function Step2Result({ step1Data, step2Data, onBuy, onRetry }: Pr
     setIsSharing(true);
     try {
       try { await navigator.clipboard.writeText(currentUrl); } catch (e) {}
+      
+      // Step1 + Step2 결과 이미지 2장 준비
+      const files: File[] = [];
+      try {
+        const res1 = await fetch(getAbsoluteUrl(step1Data.resultImg));
+        const blob1 = await res1.blob();
+        files.push(new File([blob1], `NBTI_${step1Data.name}.jpg`, { type: 'image/jpeg' }));
+      } catch (e) { console.log('Step1 이미지 로드 실패:', e); }
+      
+      try {
+        const res2 = await fetch(getAbsoluteUrl(step2Data.resultImg));
+        const blob2 = await res2.blob();
+        files.push(new File([blob2], `NBTI_${step2Data.name}.jpg`, { type: 'image/jpeg' }));
+      } catch (e) { console.log('Step2 이미지 로드 실패:', e); }
+
+      const shareText = `[네일BTI] ${step1Data.name} × ${step2Data.name}\n나도 테스트하기 👉 ${currentUrl}`;
+
       const shareData: ShareData = {
-        title: '(네일)NBTI 결과',
-        text: `[(네일)NBTI] ${step1Data.name} × ${step2Data.name}`,
-        url: currentUrl,
+        title: '네일BTI 결과',
+        text: shareText,
+        ...(files.length > 0 ? { files } : {}),
       };
+
       if (navigator.share && navigator.canShare(shareData)) {
         await navigator.share(shareData);
+      } else if (files.length > 0) {
+        // files가 지원 안 되면 files 빼고 재시도
+        const fallbackData: ShareData = { title: '네일BTI 결과', text: shareText, url: currentUrl };
+        if (navigator.share && navigator.canShare(fallbackData)) {
+          await navigator.share(fallbackData);
+        } else {
+          if (platformName === 'twitter') shareTwitterFallback();
+          else if (platformName === 'facebook') shareFacebookFallback();
+          else downloadImagesFallback();
+        }
       } else {
         if (platformName === 'twitter') shareTwitterFallback();
         else if (platformName === 'facebook') shareFacebookFallback();
@@ -69,8 +97,34 @@ export default function Step2Result({ step1Data, step2Data, onBuy, onRetry }: Pr
     }
   };
 
+  const downloadImagesFallback = async () => {
+    try {
+      // Step1 이미지 다운로드
+      const res1 = await fetch(getAbsoluteUrl(step1Data.resultImg));
+      const blob1 = await res1.blob();
+      const url1 = window.URL.createObjectURL(blob1);
+      const a1 = document.createElement('a');
+      a1.href = url1; a1.download = `NBTI_${step1Data.name}.jpg`;
+      document.body.appendChild(a1); a1.click(); document.body.removeChild(a1);
+      window.URL.revokeObjectURL(url1);
+
+      // Step2 이미지 다운로드
+      const res2 = await fetch(getAbsoluteUrl(step2Data.resultImg));
+      const blob2 = await res2.blob();
+      const url2 = window.URL.createObjectURL(blob2);
+      const a2 = document.createElement('a');
+      a2.href = url2; a2.download = `NBTI_${step2Data.name}.jpg`;
+      document.body.appendChild(a2); a2.click(); document.body.removeChild(a2);
+      window.URL.revokeObjectURL(url2);
+
+      alert("✅ 결과 이미지 2장이 저장되었습니다!\nSNS에 이미지와 링크를 함께 올려주세요.");
+    } catch (e) {
+      alert("이미지 저장에 실패했습니다. 스크린샷을 이용해주세요.");
+    }
+  };
+
   const shareTwitterFallback = () => {
-    const text = `[(네일)NBTI] ${step1Data.name} × ${step2Data.name} - 내 손톱 성격 확인하기`;
+    const text = `[네일BTI] ${step1Data.name} × ${step2Data.name} - 내 손톱 성격 확인하기`;
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(currentUrl)}`, '_blank');
   };
 
@@ -83,14 +137,16 @@ export default function Step2Result({ step1Data, step2Data, onBuy, onRetry }: Pr
       alert('카카오톡 로딩 중입니다. 잠시 후 다시 시도해주세요.');
       return;
     }
+    
+    // Step2 결과 카드 이미지 사용
+    const resultImageUrl = getAbsoluteUrl(step2Data.resultImg);
+    
     window.Kakao.Share.sendDefault({
       objectType: 'feed',
       content: {
         title: `[네일BTI] ${step1Data.name} × ${step2Data.name}`,
         description: `${step2Data.subTitle}`,
-        imageUrl: getAbsoluteUrl(step2Data.mainImg) + '?t=' + Date.now(),
-        imageWidth: 800,
-        imageHeight: 800,
+        imageUrl: resultImageUrl,
         link: { mobileWebUrl: currentUrl, webUrl: currentUrl },
       },
       buttons: [
@@ -127,7 +183,7 @@ export default function Step2Result({ step1Data, step2Data, onBuy, onRetry }: Pr
         background: '#4E3B38', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center',
         fontSize: '14px', fontWeight: 'bold', color: '#fff', position: 'sticky', top: 0, zIndex: 10,
       }}>
-        (네일)NBTI : 손톱으로 알아보는 내 성격
+        네일BTI : 손톱으로 알아보는 내 성격
       </div>
 
       <div style={{ padding: '0 20px' }}>

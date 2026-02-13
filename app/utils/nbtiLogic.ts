@@ -39,6 +39,7 @@ export interface Step2ResultType {
     gloss: number;       // 에너지 발산력 (%)
   };
   mainImg: string;
+  resultImg: string;   // 공유용 결과 카드 이미지
   matchNails: { name: string; img: string }[];
   colors: {
     bg: string;
@@ -133,9 +134,9 @@ export function analyzeStep2(measurements: Record<string, MeasurementWithCurvatu
 
   let resultId = 'D-B'; // 기본: Balance (중)
 
-  if (maxCurvature >= 1.30 || stdDev >= 0.3) {
+  if (maxCurvature >= 1.10 || stdDev >= 0.03) {
     resultId = 'D-A'; // Iron (상)
-  } else if (avgCurvature < 1.4 && stdDev < 0.3) {
+  } else if (avgCurvature < 1.03 && stdDev < 0.03) {
     resultId = 'D-C'; // Glass (하)
   }
 
@@ -157,7 +158,7 @@ const DB_STEP1: Record<string, Step1ResultType> = {
     desc: `감수성이 풍부하고 미적 감각이 뛰어난 당신!\n투박하고 거친 것은 딱 질색이고, 무엇보다 '분위기'를 중요하게 생각하는군요. 논리적인 설명보다 가슴을 울리는 이야기나 매력적인 향기가 당신을 움직입니다.\n\n당신에게 세상은 하나의 거대한 예술 작품과 같아요. 남들이 "그냥 물건"이라고 할 때, 당신은 그 물건이 놓일 공간의 조명과 공기까지 상상하는 디테일 장인입니다.`,
     mainImg: '/images/nbti/P1_icn.png',
     shapeImg: '/images/nbti/P1_shape.png',
-    resultImg: '/images/nbti/P1_result.jpeg',
+    resultImg: '/images/nbti/P1_result.jpg',
     matchNails: [
       { name: '코지로지', img: '/images/nbti/nail_P1_1.png' },
       { name: '드리밍퍼플', img: '/images/nbti/nail_P1_2.png' },
@@ -175,7 +176,7 @@ const DB_STEP1: Record<string, Step1ResultType> = {
     desc: `현실적이고 계획적인 당신. 혹시 MBTI가 'J'로 끝나나요?\n남들이 "설마 그런 일이 생기겠어?" 하며 넘기는 작은 실수도 당신의 레이더망을 피할 순 없죠.\n\n미래에 대한 불안을 완벽한 계획으로 잠재우는 당신은 친구들 사이에서 '걸어 다니는 준비물 가방'으로 통합니다. 여행 갈 때 분 단위 계획표는 기본, 혹시 몰라 비상약과 여벌 옷까지 챙겨야 마음이 편안해지는군요`,
     mainImg: '/images/nbti/P2_icn.png',
     shapeImg: '/images/nbti/P2_shape.png',
-    resultImg: '/images/nbti/P2_result.jpeg',
+    resultImg: '/images/nbti/P2_result.jpg',
     matchNails: [
       { name: '프로스트블루', img: '/images/nbti/nail_P2_1.png' },
       { name: '소프트마그넷', img: '/images/nbti/nail_P2_2.png' },
@@ -193,7 +194,7 @@ const DB_STEP1: Record<string, Step1ResultType> = {
     desc: `주목받는 것을 즐기는 당신은 진정한 핵인싸!\n새로운 도전과 트렌드에 가장 민감한 얼리어답터입니다. 남들보다 한발 앞서 나가는 짜릿함을 즐기고, "어디서 샀어?"라는 질문을 들을 때 가장 행복해하죠.\n\n지루한 건 딱 질색! 끊임없이 새로운 자극을 찾아 헤매는 당신은 숏폼 콘텐츠의 주인공이자 창조자입니다. 당신의 에너지는 주변 사람까지 들썩이게 만드는 힘이 있네요.`,
     mainImg: '/images/nbti/P3_icn.png',
     shapeImg: '/images/nbti/P3_shape.png',
-    resultImg: '/images/nbti/P3_result.jpeg',
+    resultImg: '/images/nbti/P3_result.jpg',
     matchNails: [
       { name: '모브니트', img: '/images/nbti/nail_P3_1.png' },
       { name: '플럼스타', img: '/images/nbti/nail_P3_2.png' },
@@ -211,7 +212,7 @@ const DB_STEP1: Record<string, Step1ResultType> = {
     desc: `목표가 생기면 뒤도 안 보고 직진하는 불도저 같은 당신!\n시원시원한 리더십으로 주변을 이끄는 대장부 스타일이시군요. 복잡한 설명보다는 "그래서 결론이 뭔데?"를 선호하며, 확실한 성과와 보상을 중요하게 생각합니다.\n\n자신의 영역을 넓히고 지배하려는 욕구가 강해, 어딜가나 좌중을 압도하는 카리스마를 뿜어냅니다. 망설임 없는 당신의 결단력에 모두가 반할 수밖에 없겠네요.`,
     mainImg: '/images/nbti/P4_icn.png',
     shapeImg: '/images/nbti/P4_shape.png',
-    resultImg: '/images/nbti/P4_result.jpeg',
+    resultImg: '/images/nbti/P4_result.jpg',
     matchNails: [
       { name: '블루아워', img: '/images/nbti/nail_P4_1.png' },
       { name: '모카글레이즈드', img: '/images/nbti/nail_P4_2.png' },
@@ -229,7 +230,7 @@ const DB_STEP1: Record<string, Step1ResultType> = {
     desc: `겉으로는 한없이 평온하고 우아해 보이지만, 물밑에선 누구보다 치열하게 물장구를 치고 있는 당신. 싸움을 싫어하고 평화를 지향하지만, 사실 그 평화는 당신의 고도화된 인내심과 노력으로 만들어진 것입니다.\n\n 남들에게 흐트러진 모습을 보이는 것을 싫어해서, 힘들어도 "괜찮아요"라고 웃어넘기는 경우가 많군요. 스스로에게 엄격한 외유내강형 리더입니다.`,
     mainImg: '/images/nbti/P5_icn.png',
     shapeImg: '/images/nbti/P5_shape.png',
-    resultImg: '/images/nbti/P5_result.jpeg',
+    resultImg: '/images/nbti/P5_result.jpg',
     matchNails: [
       { name: '스노우치크', img: '/images/nbti/nail_P5_1.png' },
       { name: '스모크마그넷', img: '/images/nbti/nail_P5_2.png' },
@@ -247,7 +248,7 @@ const DB_STEP1: Record<string, Step1ResultType> = {
     desc: `감정에 쉽게 휘둘리지 않고 언제나 침착한 당신은 인간 시몬스! 묵묵히 제 몫을 다하며 깊은 신뢰를 주는 당신 곁에 있으면, 누구나 마음의 안정을 얻게 됩니다.\n\n유행에 휩쓸리기보다는 변하지 않는 본질적인 가치를 중요하게 생각하며, 한번 맺은 인연을 소중히 여깁니다. 팀 내에서 묵묵히 중심을 잡아주는 정신적 지주 역할을 하는 경우가 많군요.`,
     mainImg: '/images/nbti/P6_icn.png',
     shapeImg: '/images/nbti/P6_shape.png',
-    resultImg: '/images/nbti/P6_result.jpeg',
+    resultImg: '/images/nbti/P6_result.jpg',
     matchNails: [
       { name: '토피아가일', img: '/images/nbti/nail_P6_1.png' },
       { name: '웨딩베일', img: '/images/nbti/nail_P6_2.png' },
@@ -269,14 +270,15 @@ const DB_STEP2: Record<string, Step2ResultType> = {
     name: '뚝심있는 승부사',
     subTitle: '흔들리지 않는 단단한 내면',
     tags: ['#리더십', '#강인함', '#책임감'],
-    desc: `최고의 멘탈을 가진 사파군이며 확고한 철학을 가진 리더형입니다. 한번 정한 목표는 끝까지 지켜내는 의리와 책임감이 돋보이며, 위기 상황에서 더욱 냉철한 판단력을 발휘합니다. 내면의 압력을 견디는 힘이 강해 주변에 신뢰감을 줍니다.\n\n굽히지 않는 당신의 신념처럼 손톱의 굴곡(C커브)도 깊고 확실하군요. 평평하거나 딱딱한 플라스틱 팁은 당신의 높은 손톱 아치에 맞지 않아 쉽게 들뜨거나 통증을 유발할 수 있습니다.`,
+    desc: `최고의 멘탈을 가진 사파군입니다. 확고한 철학을 가진 리더형입니다. 한번 정한 목표는 끝까지 지켜내는 의리와 책임감이 돋보이며, 위기 상황에서 더욱 냉철한 판단력을 발휘합니다. 내면의 압력을 견디는 힘이 강해 주변에 신뢰감을 줍니다.\n\n굽히지 않는 당신의 신념처럼 손톱의 굴곡(C커브)도 깊고 확실하군요. 평평하거나 딱딱한 플라스틱 팁은 당신의 높은 손톱 아치에 맞지 않아 쉽게 들뜨거나 통증을 유발할 수 있습니다.`,
     solution: `깊은 굴곡까지 유연하게 늘어나 빈틈없이 밀착되는 '고밀착 젤네일 스티커'가 정답입니다. 당신의 강인한 손톱을 부드럽게 감싸주어, 어떤 상황에서도 흔들리지 않는 완벽한 지속력을 선사합니다.`,
     curvatureLevel: '상',
     stats: { hardness: 95, flexibility: 30, gloss: 85 },
     mainImg: '/images/nbti/ironType.png',
+    resultImg: '/images/nbti/D_A_result.jpg',
     matchNails: [
-      { name: '모카글레이즈드', img: '/images/nbti/nail_D_A_1.png' },
-      { name: '스모크마그넷', img: '/images/nbti/nail_D_A_2.png' },
+      { name: '모카글레이즈드', img: '/images/nbti/nail_P4_1.png' },
+      { name: '스모크마그넷', img: '/images/nbti/nail_P5_2.png' },
     ],
     colors: { bg: '#C94044', text: '#FFFFFF', accent: '#FF6B35', card: 'rgba(255,255,255,0.1)' },
     avgCurvature: '',
@@ -292,11 +294,12 @@ const DB_STEP2: Record<string, Step2ResultType> = {
     curvatureLevel: '중',
     stats: { hardness: 80, flexibility: 80, gloss: 60 },
     mainImg: '/images/nbti/balType.png',
+    resultImg: '/images/nbti/D_B_result.jpg',
     matchNails: [
-      { name: '프로스트블루', img: '/images/nbti/nail_D_B_1.png' },
-      { name: '토피아가일', img: '/images/nbti/nail_D_B_2.png' },
+      { name: '프로스트블루', img: '/images/nbti/nail_P2_1.png' },
+      { name: '토피아가일', img: '/images/nbti/nail_P6_1.png' },
     ],
-    colors: { bg: '#4A6741', text: '#FFFFFF', accent: '#4CAF50', card: 'rgba(255,255,255,0.1)' },
+    colors: { bg: '#4A9A44', text: '#FFFFFF', accent: '#4CAF50', card: 'rgba(255,255,255,0.1)' },
     avgCurvature: '',
   },
   'D-C': {
@@ -310,11 +313,12 @@ const DB_STEP2: Record<string, Step2ResultType> = {
     curvatureLevel: '하',
     stats: { hardness: 30, flexibility: 95, gloss: 90 },
     mainImg: '/images/nbti/glassType.png',
+    resultImg: '/images/nbti/D_C_result.jpg',
     matchNails: [
-      { name: '스노우치크', img: '/images/nbti/nail_D_C_1.png' },
-      { name: '드리밍퍼플도트', img: '/images/nbti/nail_D_C_2.png' },
+      { name: '스노우치크', img: '/images/nbti/nail_P5_1.png' },
+      { name: '드리밍퍼플도트', img: '/images/nbti/nail_P1_2.png' },
     ],
-    colors: { bg: '#6B5B8A', text: '#FFFFFF', accent: '#CE93D8', card: 'rgba(255,255,255,0.1)' },
+    colors: { bg: '#AEBAF3', text: '#FFFFFF', accent: '#CE93D8', card: 'rgba(255,255,255,0.1)' },
     avgCurvature: '',
   },
 };
